@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VendoAI - Vends plus facilement</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b1020;
+            color: #f5f7ff;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 8%;
+            border-bottom: 1px solid #26304b;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #72f5bd;
+        }
+
+        .badge {
+            color: #72f5bd;
+            font-size: 13px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 65px 20px 35px;
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 52px);
+            margin-bottom: 15px;
+        }
+
+        .hero h1 span {
+            color: #72f5bd;
+        }
+
+        .hero p {
+            color: #aab4ce;
+            line-height: 1.7;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+        }
+
+        .card {
+            background: #141c32;
+            border: 1px solid #283451;
+            border-radius: 18px;
+            padding: 25px;
+        }
+
+        .card h2 {
+            font-size: 21px;
+            margin-top: 0;
+        }
+
+        .card p {
+            color: #aab4ce;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        label {
+            display: block;
+            margin: 17px 0 8px;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: #0b1020;
+            border: 1px solid #34415e;
+            border-radius: 9px;
+            color: white;
+            font-size: 15px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 85px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 13px;
+            background: #72f5bd;
+            color: #0b1020;
+            font-weight: bold;
+            font-size: 15px;
+            border: none;
+            border-radius: 9px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #4ddba1;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #0b1020;
+            border: 1px solid #34415e;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .copy-button {
+            background: #293652;
+            color: white;
+        }
+
+        .profit {
+            margin-top: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #72f5bd;
+        }
+
+        footer {
+            text-align: center;
+            color: #8792ad;
+            font-size: 13px;
+            padding: 40px 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">VendoAI.</div>
+    <div class="badge">SIMPLE · RAPIDE · GRATUIT</div>
+</header>
+
+<section class="hero">
+    <h1>Vends mieux.<br><span>En moins de temps.</span></h1>
+    <p>
+        Crée des annonces plus claires et calcule tes bénéfices
+        grâce à des outils simples réunis au même endroit.
+    </p>
+</section>
+
+<main class="container">
+    <div class="grid">
+
+        <section class="card">
+            <h2>✍️ Générateur d'annonces</h2>
+            <p>Prépare un titre et une description pour ton objet.</p>
+
+            <label for="product">Nom de l'objet</label>
+            <input id="product" placeholder="Ex. : baskets Nike Air Max">
+
+            <label for="brand">Marque (facultatif)</label>
+            <input id="brand" placeholder="Ex. : Nike">
+
+            <label for="condition">État de l'objet</label>
+            <select id="condition">
+                <option>Neuf</option>
+                <option selected>Très bon état</option>
+                <option>Bon état</option>
+                <option>État correct</option>
+                <option>À réparer</option>
+            </select>
+
+            <label for="details">Informations supplémentaires</label>
+            <textarea id="details" placeholder="Taille, couleur, accessoires..."></textarea>
+
+            <button onclick="generateAd()">Créer mon annonce</button>
+
+            <div id="adResult" class="result hidden"></div>
+            <button id="copyButton" class="copy-button hidden" onclick="copyAd()">
+                Copier mon annonce
+            </button>
+        </section>
+
+        <section class="card">
+            <h2>💰 Calculateur de bénéfices</h2>
+            <p>Estime ce qu'il te reste après la revente d'un objet.</p>
+
+            <label for="buyPrice">Prix d'achat (€)</label>
+            <input id="buyPrice" type="number" min="0" step="0.01" placeholder="Ex. : 20">
+
+            <label for="sellPrice">Prix de vente (€)</label>
+            <input id="sellPrice" type="number" min="0" step="0.01" placeholder="Ex. : 35">
+
+            <label for="costs">Autres frais (€)</label>
+            <input id="costs" type="number" min="0" step="0.01" value="0">
+
+            <button onclick="calculateProfit()">Calculer mon bénéfice</button>
+
+            <div id="profitResult" class="result hidden"></div>
+        </section>
+
+    </div>
+</main>
+
+<footer>
+    VendoAI — Un projet en construction.
+    Les résultats sont des estimations et ne garantissent pas un bénéfice.
+</footer>
+
+<script>
+    function generateAd() {
+        const product = document.getElementById("product").value.trim();
+        const brand = document.getElementById("brand").value.trim();
+        const condition = document.getElementById("condition").value;
+        const details = document.getElementById("details").value.trim();
+
+        if (!product) {
+            alert("Écris d'abord le nom de ton objet !");
+            return;
+        }
+
+        const title = brand && !product.toLowerCase().includes(brand.toLowerCase())
+            ? brand + " " + product
+            : product;
+
+        let description = title + " en " + condition.toLowerCase() + ".\n\n";
+
+        if (details) {
+            description += "Informations : " + details + "\n\n";
+        }
+
+        description += "N'hésite pas à me contacter pour obtenir plus d'informations.";
+
+        document.getElementById("adResult").innerText =
+            "TITRE :\n" + title + "\n\nDESCRIPTION :\n" + description;
+
+        document.getElementById("adResult").classList.remove("hidden");
+        document.getElementById("copyButton").classList.remove("hidden");
+    }
+
+    async function copyAd() {
+        const text = document.getElementById("adResult").innerText;
+
+        try {
+            await navigator.clipboard.writeText(text);
+            alert("Annonce copiée !");
+        } catch (error) {
+            alert("La copie automatique n'a pas fonctionné. Sélectionne le texte et copie-le manuellement.");
+        }
+    }
+
+    function calculateProfit() {
+        const buy = Number(document.getElementById("buyPrice").value);
+        const sell = Number(document.getElementById("sellPrice").value);
+        const costsInput = document.getElementById("costs").value;
+        const costs = Number(costsInput);
+
+        if (
+            document.getElementById("buyPrice").value === "" ||
+            document.getElementById("sellPrice").value === "" ||
+            costsInput === "" ||
+            !Number.isFinite(buy) ||
+            !Number.isFinite(sell) ||
+            !Number.isFinite(costs) ||
+            buy < 0 || sell < 0 || costs < 0
+        ) {
+            alert("Entre des montants valides et positifs.");
+            return;
+        }
+
+        const profit = sell - buy - costs;
+        const percentage = buy > 0 ? (profit / buy) * 100 : null;
+
+        let result = "Résultat : " + profit.toFixed(2) + " €";
+
+        if (profit > 0) {
+            result += "\nTu réalises un bénéfice estimé.";
+        } else if (profit < 0) {
+            result += "\nTu réalises une perte estimée.";
+        } else {
+            result += "\nTu ne réalises ni bénéfice ni perte.";
+        }
+
+        if (percentage !== null) {
+            result += "\nRendement par rapport au prix d'achat : "
+                + percentage.toFixed(1) + " %";
+        }
+
+        result += "\n\nAttention : ajoute les éventuels frais de plateforme, de livraison et autres coûts oubliés.";
+
+        const output = document.getElementById("profitResult");
+        output.innerText = result;
+        output.classList.remove("hidden");
+    }
+</script>
+
+</body>
+</html>
